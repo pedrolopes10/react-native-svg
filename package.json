@@ -49,7 +49,6 @@
     "jest": "jest",
     "lint": "eslint --ext .ts,.tsx src",
     "peg": "pegjs -o src/lib/extract/transform.js ./src/lib/extract/transform.peg",
-    "prepare": "npm run flowgen && npm run bob",
     "release": "npm login && release-it",
     "test": "npm run lint && npm run tsc && npm run flow && npm run jest",
     "tsc": "tsc --noEmit"
