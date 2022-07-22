@@ -1,6 +1,10 @@
 import * as React from 'react';
 import * as ReactNative from 'react-native';
-import { GestureResponderEvent, TransformsStyle, OpaqueColorValue } from 'react-native';
+import {
+  ColorValue,
+  GestureResponderEvent,
+  TransformsStyle,
+} from 'react-native';
 
 // Common props
 export type NumberProp = string | number;
@@ -8,6 +12,8 @@ export type NumberArray = NumberProp[] | NumberProp;
 
 export type FillRule = 'evenodd' | 'nonzero';
 export type Units = 'userSpaceOnUse' | 'objectBoundingBox';
+export type MarkerUnits = 'strokeWidth' | 'userSpaceOnUse';
+export type Orient = 'auto' | 'auto-start-reverse';
 
 export type TextAnchor = 'start' | 'middle' | 'end';
 export type FontStyle = 'normal' | 'italic' | 'oblique';
@@ -93,15 +99,7 @@ export interface ResponderProps extends ReactNative.GestureResponderHandlers {
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto';
 }
 
-// rgba values inside range 0 to 1 inclusive
-// rgbaArray = [r, g, b, a]
-export type rgbaArray = ReadonlyArray<number>;
-
-// argb values inside range 0x00 to 0xff inclusive
-// int32ARGBColor = 0xaarrggbb
-export type int32ARGBColor = number;
-
-export type Color = int32ARGBColor | rgbaArray | OpaqueColorValue | string;
+export type Color = ColorValue;
 
 export interface FillProps {
   fill?: Color;
@@ -468,15 +466,6 @@ export interface UseProps extends CommonPathProps {
 export const Use: React.ComponentClass<UseProps>;
 export type Use = React.ComponentClass<UseProps>;
 
-export enum EMaskUnits {
-  USER_SPACE_ON_USE = 'userSpaceOnUse',
-  OBJECT_BOUNDING_BOX = 'objectBoundingBox',
-}
-
-export type TMaskUnits =
-  | EMaskUnits.USER_SPACE_ON_USE
-  | EMaskUnits.OBJECT_BOUNDING_BOX;
-
 export interface MaskProps extends CommonPathProps {
   id?: string;
   x?: NumberProp;
@@ -484,21 +473,11 @@ export interface MaskProps extends CommonPathProps {
   width?: NumberProp;
   height?: NumberProp;
   maskTransform?: ColumnMajorTransformMatrix | string;
-  maskUnits?: TMaskUnits;
-  maskContentUnits?: TMaskUnits;
+  maskUnits?: Units;
+  maskContentUnits?: Units;
 }
 export const Mask: React.ComponentClass<MaskProps>;
 export type Mask = React.ComponentClass<MaskProps>;
-
-export enum MarkerUnits {
-  STROKE_WIDTH = 'strokeWidth',
-  USER_SPACE_ON_USE = 'userSpaceOnUse',
-}
-
-export enum Orient {
-  AUTO = 'auto',
-  AUTO_START_REVERSE = 'auto-start-reverse',
-}
 
 export interface MarkerProps {
   id?: string;
@@ -540,12 +519,14 @@ export interface JsxAST extends AST {
 
 export interface UriProps extends SvgProps {
   uri: string | null;
+  onError?: (error: Error) => void;
   override?: SvgProps;
 }
 export type UriState = { xml: string | null };
 
 export interface XmlProps extends SvgProps {
   xml: string | null;
+  onError?: (error: Error) => void;
   override?: SvgProps;
 }
 export type XmlState = { ast: JsxAST | null };
