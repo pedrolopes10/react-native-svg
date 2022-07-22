@@ -18,6 +18,7 @@ xcuserdata
 DerivedData
 *.hmap
 *.ipa
+gradle
 project.xcworkspace
 
 # Android/IJ

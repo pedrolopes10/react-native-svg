@@ -1,4 +1,5 @@
-import { ColorValue, processColor } from 'react-native';
+import extractColor, { integerColor } from './extractColor';
+import { Color } from './types';
 
 const urlIdPattern = /^url\(#(.+)\)$/;
 
@@ -6,7 +7,13 @@ const currentColorBrush = [2];
 const contextFillBrush = [3];
 const contextStrokeBrush = [4];
 
-export default function extractBrush(color?: ColorValue) {
+export default function extractBrush(color?: Color) {
+  if (typeof color === 'number') {
+    if (color >>> 0 === color && color >= 0 && color <= 0xffffffff) {
+      return integerColor(color);
+    }
+  }
+
   if (!color || color === 'none') {
     return null;
   }
@@ -28,18 +35,23 @@ export default function extractBrush(color?: ColorValue) {
     return [1, brush[1]];
   }
 
-  const processedColor = processColor(color);
-  if (typeof processedColor === 'number') {
-    return processedColor;
+  const int32ARGBColor = extractColor(color);
+  if (typeof int32ARGBColor === 'number') {
+    return int32ARGBColor;
   }
 
-  if (typeof processedColor === 'object' && processedColor !== null) {
-    // if we got an object, it should be `PlatformColor` or `DynamicColorIOS`,
-    // so we pass it as an array with `0` value as first item, which is interpreted
-    // on the native side as color to be managed by `RCTConvert`.
-    return [0, processedColor];
+  if (typeof color === 'object' && color !== null) {
+    // iOS PlatformColor
+    if ('semantic' in color) {
+      return [0, color];
+    }
+
+    // Android PlatformColor
+    if ('resource_paths' in color) {
+      return [0, color];
+    }
   }
 
-  console.warn(`"${String(color)}" is not a valid color or brush`);
+  console.warn(`"${color}" is not a valid color or brush`);
   return null;
 }

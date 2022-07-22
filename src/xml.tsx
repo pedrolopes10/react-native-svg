@@ -110,10 +110,9 @@ export const err = console.error.bind(console);
 
 export function SvgXml(props: XmlProps) {
   const { onError = err, xml, override } = props;
-  const ast = useMemo<JsxAST | null>(
-    () => (xml !== null ? parse(xml) : null),
-    [xml],
-  );
+  const ast = useMemo<JsxAST | null>(() => (xml !== null ? parse(xml) : null), [
+    xml,
+  ]);
 
   try {
     return <SvgAst ast={ast} override={override || props} />;
@@ -125,17 +124,18 @@ export function SvgXml(props: XmlProps) {
 
 export async function fetchText(uri: string) {
   const response = await fetch(uri);
-  if (response.ok) {
-    return await response.text();
-  }
-  throw new Error(`Fetching ${uri} failed with status ${response.status}`);
+  return await response.text();
 }
 
 export function SvgUri(props: UriProps) {
   const { onError = err, uri } = props;
   const [xml, setXml] = useState<string | null>(null);
   useEffect(() => {
-    uri ? fetchText(uri).then(setXml).catch(onError) : setXml(null);
+    uri
+      ? fetchText(uri)
+          .then(setXml)
+          .catch(onError)
+      : setXml(null);
   }, [onError, uri]);
   return <SvgXml xml={xml} override={props} />;
 }

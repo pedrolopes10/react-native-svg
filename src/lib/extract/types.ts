@@ -1,8 +1,14 @@
 import { Component } from 'react';
-import { ColorValue, GestureResponderEvent } from 'react-native';
+import { GestureResponderEvent } from 'react-native';
 
 export type NumberProp = string | number;
 export type NumberArray = NumberProp[] | NumberProp;
+
+// rgbaArray = [r, g, b, a]
+export type rgbaArray = number[];
+// int32ARGBColor = 0xaarrggbb
+export type Int32ARGBColor = number;
+export type Color = Int32ARGBColor | rgbaArray | string;
 
 export type Linecap = 'butt' | 'square' | 'round';
 export type Linejoin = 'miter' | 'bevel' | 'round';
@@ -69,12 +75,12 @@ export type ResponderInstanceProps = {
   ) => boolean;
 };
 export type FillProps = {
-  fill?: ColorValue;
+  fill?: Color;
   fillRule?: 'evenodd' | 'nonzero';
   fillOpacity?: NumberProp;
 };
 export type StrokeProps = {
-  stroke?: ColorValue;
+  stroke?: Color;
   strokeWidth?: NumberProp;
   strokeOpacity?: NumberProp;
   strokeDasharray?: NumberArray;
