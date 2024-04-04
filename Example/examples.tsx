@@ -15,6 +15,10 @@ import * as Image from './examples/Image';
 import * as Reusable from './examples/Reusable';
 import * as TouchEvents from './examples/TouchEvents';
 import * as PanResponder from './examples/PanResponder';
+import * as Reanimated from './examples/Reanimated';
+import * as Transforms from './examples/Transforms';
+import * as Markers from './examples/Markers';
+import * as Mask from './examples/Mask';
 
 export {
   Svg,
@@ -34,5 +38,9 @@ export {
   TouchEvents,
   Reusable,
   PanResponder,
+  Reanimated,
+  Transforms,
+  Markers,
+  Mask,
 };
 

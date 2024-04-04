@@ -4,7 +4,7 @@
  */
 'use strict';
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -14,12 +14,8 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
-import Modal from './Modal';
-import {
-  Svg,
-  Circle,
-  Line,
-} from './Svg';
+import {Modal, Platform} from 'react-native';
+import {Svg, Circle, Line} from 'react-native-svg';
 
 import * as examples from './examples';
 
@@ -98,7 +94,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const names = [
+const names: (keyof typeof examples)[] = [
   'Svg',
   'Stroking',
   'Path',
@@ -116,6 +112,10 @@ const names = [
   'TouchEvents',
   'PanResponder',
   'Reusable',
+  'Reanimated',
+  'Transforms',
+  'Markers',
+  'Mask',
 ];
 
 const initialState = {
@@ -124,9 +124,13 @@ const initialState = {
 };
 
 export default class SvgExample extends Component {
-  state = initialState;
+  state: {
+    content: React.ReactNode;
+    modal: boolean;
+    scroll?: boolean;
+  } = initialState;
 
-  show = name => {
+  show = (name: keyof typeof examples) => {
     if (this.state.modal) {
       return;
     }
@@ -145,7 +149,7 @@ export default class SvgExample extends Component {
             ))}
           </View>
         ),
-        scroll: example.scroll !== false,
+        scroll: (example as {scroll?: boolean}).scroll !== false,
       });
     }
   };
@@ -201,14 +205,18 @@ export default class SvgExample extends Component {
       <View style={styles.container}>
         <Text style={styles.welcome}>SVG library for React Apps</Text>
         <View style={styles.contentContainer}>{this.getExamples()}</View>
-        <Modal
-          ariaHideApp={false}
-          transparent={false}
-          animationType="fade"
-          visible={this.state.modal}
-          onRequestClose={this.hide}>
-          {this.modalContent()}
-        </Modal>
+        {(Platform.OS === 'windows' || Platform.OS === 'macos') &&
+        this.state.modal ? (
+          <View style={styles.scroll}>{this.modalContent()}</View>
+        ) : (
+          <Modal
+            transparent={false}
+            animationType="fade"
+            visible={this.state.modal}
+            onRequestClose={this.hide}>
+            {this.modalContent()}
+          </Modal>
+        )}
       </View>
     );
   }

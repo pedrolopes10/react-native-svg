@@ -1,22 +1,26 @@
-import React from 'react';
-import { Image, ImageSourcePropType } from 'react-native';
+import * as React from 'react';
+import type { ImageProps as RNImageProps, NativeMethods } from 'react-native';
+import { Image } from 'react-native';
 import { alignEnum, meetOrSliceTypes } from '../lib/extract/extractViewBox';
 import { withoutXY } from '../lib/extract/extractProps';
-import { NumberProp } from '../lib/extract/types';
+import type { CommonPathProps, NumberProp } from '../lib/extract/types';
 import Shape from './Shape';
-import { RNSVGImage } from './NativeComponents';
+import RNSVGImage from '../fabric/ImageNativeComponent';
 
 const spacesRegExp = /\s+/;
 
-export default class SvgImage extends Shape<{
-  preserveAspectRatio?: string;
+export interface ImageProps extends CommonPathProps {
   x?: NumberProp;
   y?: NumberProp;
   width?: NumberProp;
   height?: NumberProp;
-  xlinkHref?: string | number | ImageSourcePropType;
-  href?: string | number | ImageSourcePropType;
-}> {
+  xlinkHref?: RNImageProps['source'] | string;
+  href?: RNImageProps['source'] | string;
+  preserveAspectRatio?: string;
+  opacity?: NumberProp;
+}
+
+export default class SvgImage extends Shape<ImageProps> {
   static displayName = 'Image';
 
   static defaultProps = {
@@ -54,12 +58,12 @@ export default class SvgImage extends Shape<{
       src: !href
         ? null
         : Image.resolveAssetSource(
-            typeof href === 'string' ? { uri: href } : href,
+            typeof href === 'string' ? { uri: href } : href
           ),
     };
     return (
       <RNSVGImage
-        ref={this.refMethod}
+        ref={(ref) => this.refMethod(ref as (SvgImage & NativeMethods) | null)}
         {...withoutXY(this, props)}
         {...imageProps}
       />
