@@ -50,3 +50,4 @@ experimental/
 
 # VS Code
 .vscode/
+.history
